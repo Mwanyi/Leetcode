@@ -25,9 +25,9 @@
 - 二分查找
 - 滑动窗口
 
-|                             题目                             | 难度 |   题解   |
-| :----------------------------------------------------------: | :--: | :------: |
-| [167. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/) | 中等 | 左右指针 |
-|                                                              |      |          |
-|                                                              |      |          |
+|                             题目                             | 难度 |        题解        |
+| :----------------------------------------------------------: | :--: | :----------------: |
+| [167. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/) | 中等 |      左右指针      |
+| [5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/) | 中等 | 中间扩散的左右指针 |
+|                                                              |      |                    |
 

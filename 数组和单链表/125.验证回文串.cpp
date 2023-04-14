@@ -8,11 +8,16 @@
 class Solution {
 public:
     bool isPalindrome(string s) {
-        s = s.lower();
+        string str;
+        for (char & c : s) {
+            if (isalnum(c)) {
+                str += tolower(c);
+            }
+        }
         int begin = 0;
-        int end = s.size()-1;
+        int end = str.size()-1;
         while (begin <= end) {
-            if (s[begin] != s[end]) {
+            if (str[begin] != str[end]) {
                 return false;
             }
             begin++;
