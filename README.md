@@ -199,3 +199,82 @@ int BFS(Node start, Node target) {
   ![img](https://labuladong.github.io/algo/images/BFS/2.jpeg)
 
 - 但是使用双向BFS的前提是知道终点
+
+## 二分查找
+
+```cpp
+int BinarySearcher(vector<int>& nums, int target) {
+    // 区间是左闭右闭
+    int begin = 0;
+    int end = nums.size()-1;
+    // while中要加=
+    while (begin <= end) {
+        // 这里更改为这样可以有效防止(begin+end)/2中begin和end太大导致溢出
+        int mid = begin + (end - begin)/2;
+        if (nums[mid] == target) {
+            ...
+        }
+        else if(nums[mid] < target) {
+            begin = mid+1;
+        }
+        else if(nums[mid] > target) {
+            end = mid-1;
+        }
+    }
+    return ..
+}
+```
+
+- 上述框架的缺陷性：不可定位到target的左右边界
+
+### 寻找左边边界的二分搜索
+
+```cpp
+int left_bound(vector<int>& nums, int target) {
+    int left = 0, right = nums.size() - 1;
+    // 搜索区间为 [left, right]
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            // 搜索区间变为 [mid+1, right]
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            // 搜索区间变为 [left, mid-1]
+            right = mid - 1;
+        } else if (nums[mid] == target) {
+            // 收缩右侧边界，关键点
+            right = mid - 1;
+        }
+    }
+    // 判断 target 是否存在于 nums 中
+    // 此时 target 比所有数都大，返回 -1
+    if (left == nums.size()) return -1;
+    // 判断一下 nums[left] 是不是 target
+    return nums[left] == target ? left : -1;
+}
+```
+
+### 寻找右边边界的二分搜索
+
+```cpp
+int right_bound(vector<int>& nums, int target) {
+    int left = 0, right = nums.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            right = mid - 1;
+        } else if (nums[mid] == target) {
+            // 这里改成收缩左侧边界即可
+            left = mid + 1;
+        }
+    }
+    // 最后改成返回 left - 1
+    if (left - 1 < 0) return -1;
+    return nums[left - 1] == target ? (left - 1) : -1;
+}
+```
+
+## 滑动窗口
+
