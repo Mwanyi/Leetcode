@@ -140,3 +140,62 @@ def backtrack(路径, 选择列表):
 
 #### 元素无重可重选
 
+##### 子集/组合
+
+在之前的无重不可复选时保证不可复选的方式是在向下递归调用时使用一个`start`变量，定义下一层从当前的`start+1`开始，那么这里只需要将下一层同样也设为`start`即可保证可以复选
+
+![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/10.jpeg)
+
+## BFS算法框架
+
+BFS广度优先算法，**问题的本质就是让你在一幅「图」中找到从起点 `start` 到终点 `target` 的最近距离**
+
+实现使用队列queue
+
+```cpp
+// 返回从起点到终点的最近距离
+int BFS(Node start, Node target) {
+    queue<Node> q;
+    unordered_set<Node> visited; // 避免重复走
+    
+    q.push(start);
+    visited.insert(start);
+    int step; // 记录扩散的步数
+    while (!q.empty()) {
+        int sz = q.size();
+        for (int i = 0; i < sz; i++) {
+            Node cur = q.front();
+            q.pop();
+            if (cur == target) {
+                return step;
+            }
+            /* 将 cur 的相邻节点加入队列 */
+            for (Node n : cur.adj()) {
+                if (visited.count(n) == 0) {
+                    q.push(n);
+                    visited.insert(n);
+                }
+            }
+        }
+        /* 划重点：更新步数在这里 */
+        step++;
+    }
+}
+```
+
+- DFS 是线，BFS 是面；DFS 是单打独斗，BFS 是集体行动。
+- BFS 可以找到最短距离，但是空间复杂度高，而 DFS 的空间复杂度较低。
+
+### 双向BFS优化
+
+**传统的 BFS 框架就是从起点开始向四周扩散，遇到终点时停止；而双向 BFS 则是从起点和终点同时开始扩散，当两边有交集的时候停止**。
+
+- 时间复杂度分析：两个最坏的时间复杂度都为O(n)，但是实际上双向会更快一点
+
+  ![img](https://labuladong.github.io/algo/images/BFS/1.jpeg)
+
+  可以看出使用双向遍历的节点数更少
+
+  ![img](https://labuladong.github.io/algo/images/BFS/2.jpeg)
+
+- 但是使用双向BFS的前提是知道终点
