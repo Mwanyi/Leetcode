@@ -7,6 +7,8 @@
 // @lc code=start
 class Solution {
 public:
+/*
+    // 原始版本
     int maxProfit(vector<int>& prices) {
         // k=1
         int n = prices.size();
@@ -24,6 +26,21 @@ public:
             dp[i][1] = max(dp[i-1][1], dp[i-2][0]-prices[i]);
         }
         return dp[n-1][0];
+    }
+*/
+    // 空间优化版本
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        int not_have = 0;
+        int have = -prices[0];
+        int pre_nohave = 0;
+        for (int i = 1; i < n; i++) {
+            int ret = not_have;
+            not_have = max(not_have, have+prices[i]);
+            have = max(have, pre_nohave-prices[i]);
+            pre_nohave = ret;
+        }
+        return not_have;
     }
 };
 // @lc code=end
