@@ -62,7 +62,7 @@ for 状态1 in 状态1的所有取值：
 
 以最难的一个题目为例：
 
-![img](https://labuladong.github.io/algo/images/%e8%82%a1%e7%a5%a8%e9%97%ae%e9%a2%98/title.png)
+![img](README.assets/title.png)
 
 该问题的**状态**有三个：
 
@@ -88,7 +88,7 @@ for 0 <= i < n:
 
 状态转移框架：
 
-![img](https://labuladong.github.io/algo/images/%e8%82%a1%e7%a5%a8%e9%97%ae%e9%a2%98/1.png)
+![img](README.assets/1.png)
 
 那么对应的：
 
@@ -162,9 +162,9 @@ def backtrack(路径, 选择列表):
 
 **但无论形式怎么变化，其本质就是穷举所有解，而这些解呈现树形结构，所以合理使用回溯算法框架，稍改代码框架即可把这些问题一网打尽**。
 
-![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/1.jpeg)
+![img](README.assets/1.jpeg)
 
-![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/2.jpeg)
+![img](README.assets/2.jpeg)
 
 #### 元素无重不可复选
 
@@ -172,7 +172,7 @@ def backtrack(路径, 选择列表):
 
 满足该子集树，在前序位置就是一个结果，加入结果列表，选择列表是当前元素之后的元素依次加入，后序位置是撤销选择
 
-![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/5.jpeg)
+![img](README.assets/5.jpeg)
 
 ##### 组合
 
@@ -182,7 +182,7 @@ def backtrack(路径, 选择列表):
 
 前序位置，当走到叶节点（也就是当前路径数组长度等于nums长度）时加入结果数组中，选择列表就是nums中所有没有被遍历过的节点（使用used数组来保存是否被遍历条件），后序位置撤销选择，也要更改used数组
 
-![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/7.jpeg)
+![img](README.assets/7.jpeg)
 
 #### 元素可重不可重选
 
@@ -190,7 +190,7 @@ def backtrack(路径, 选择列表):
 
 按照上面的元素不重不可复选框架进行剪枝，需要先对数组进行排序（让重复的元素挨在一起），当遇到重复元素时就遍历第一条，其余都跳过
 
-![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/9.jpeg)
+![img](README.assets/9.jpeg)
 
 ##### 排列问题
 
@@ -206,7 +206,7 @@ def backtrack(路径, 选择列表):
 
 在之前的无重不可复选时保证不可复选的方式是在向下递归调用时使用一个`start`变量，定义下一层从当前的`start+1`开始，那么这里只需要将下一层同样也设为`start`即可保证可以复选
 
-![img](https://labuladong.github.io/algo/images/%e6%8e%92%e5%88%97%e7%bb%84%e5%90%88/10.jpeg)
+![img](README.assets/10.jpeg)
 
 ## BFS算法框架
 
@@ -254,11 +254,11 @@ int BFS(Node start, Node target) {
 
 - 时间复杂度分析：两个最坏的时间复杂度都为O(n)，但是实际上双向会更快一点
 
-  ![img](https://labuladong.github.io/algo/images/BFS/1.jpeg)
+  ![img](README.assets/1.jpeg)
 
   可以看出使用双向遍历的节点数更少
 
-  ![img](https://labuladong.github.io/algo/images/BFS/2.jpeg)
+  ![img](README.assets/2.jpeg)
 
 - 但是使用双向BFS的前提是知道终点
 
