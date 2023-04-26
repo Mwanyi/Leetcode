@@ -20,6 +20,14 @@
 | [27. 移除元素](https://leetcode.cn/problems/remove-element/) | 简单 |      |
 |                                                              |      |      |
 
+### nsum问题
+
+|                         题目                         | 难度 | 题解 |
+| :--------------------------------------------------: | :--: | :--: |
+| [1. 两数之和](https://leetcode.cn/problems/two-sum/) | 简单 |      |
+|  [15. 三数之和](https://leetcode.cn/problems/3sum/)  | 中等 |      |
+|  [18. 四数之和](https://leetcode.cn/problems/4sum/)  | 中等 |      |
+
 #### 左右指针
 
 - 二分查找

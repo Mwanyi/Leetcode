@@ -11,9 +11,57 @@ this is a Leetcode submit recode
 
 ## 数组/单链表系列算法
 
-- 双指针
+### 双指针
 
-- 左右指针
+#### nsum问题
+
+nsum问题就是从一个数组`nums`中选出能够组成`target`的n个数
+
+框架：
+
+```cpp
+vector<vector<int>> nSumTarget(vector<int>& nums, int n, int start, int target) {
+    sort(nums.begin(), nums.end());
+    int sz = nums.size();
+    vector<vector<int>> res;
+    if (n < 2 || sz < n) return res;
+    if (n == 2) {
+        int left = start;
+        int right = sz-1;
+        while (left < right) {
+            int num = nums[left] + nums[right];
+            int l = nums[left];
+            int r = nums[right];
+            if (num > target) {
+                while (left < right && nums[right] == r) right--;
+            } 
+            else if (num < target) {
+                while (left < right && nums[left] == l) left++;
+            }
+            else {
+                res.push_back({l, r});
+                while (left < right && nums[right] == r) right--;
+                while (left < right && nums[left] == l) left++;
+            }
+        }
+    }
+    else {
+        for (int i = start; i < sz; i++) {
+            vector<vector<int>> sub = nSumTarget(nums, n-1, i+1, target-nums[i]);
+            for (vector<int>& v : sub) {
+                v.push_back(nums[i]);
+                res.push_back(v);
+            }
+            while (i < sz - 1 && nums[i] == nums[i + 1]) i++;
+        }
+    }
+    return res;
+}
+```
+
+
+
+### 左右指针
 
 ## 二叉树
 
