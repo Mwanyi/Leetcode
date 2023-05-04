@@ -59,7 +59,24 @@ vector<vector<int>> nSumTarget(vector<int>& nums, int n, int start, int target) 
 }
 ```
 
+### 递归方法
 
+- 递归方法反转链表
+
+  ```cpp
+  // 定义：输入一个单链表头结点，将该链表反转，返回新的头结点
+  ListNode* reverse(ListNode* head) {
+      if (head == nullptr || head->next == nullptr) {
+          return head;
+      }
+      ListNode* last = reverse(head->next);
+      head->next->next = head;
+      head->next = nullptr;
+      return last;
+  }
+  ```
+
+  
 
 ### 左右指针
 
