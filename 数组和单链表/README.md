@@ -105,6 +105,76 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 
 ![img](README.assets/6.jpg)
 
+#### 判断回文链表
+
+|                             题目                             | 难度 | 题解 |
+| :----------------------------------------------------------: | :--: | :--: |
+| [234. 回文链表](https://leetcode.cn/problems/palindrome-linked-list/) | 简单 | 234  |
+
+##### 234 判断回文链表
+
+1. 直接反转链表，然后判断，空间复杂度O(n)
+
+2. 使用后序位置判断，空间复杂度O(n)
+
+   ```c++
+   left = head;
+   return traverse(head);
+   bool traverse(ListNode* right) {
+       if (!right) return true;
+       bool res = traverse(right->next);
+       // 后续位置
+       res = res && (left->val == right->val);
+       left = left->next;
+       return res;
+   }
+   ```
+
+3. 空间优化为O(1)
+
+   ```c++
+       // 1.快慢指针找到中间结点
+       ListNode* slow = head;
+       ListNode* fast = head;
+       while (fast && fast->next) {
+           slow = slow->next;
+           fast = fast->next->next;
+       }
+       // 奇数长度的起始点在中间结点的后面
+       if (fast) {
+           slow = slow->next;
+       }
+       // 2.反转slow之后的链表
+       ListNode* right = reverse(slow);
+       // 3.对比
+       left = head;
+       while (right && left)
+       {
+           if (right->val != left->val) {
+               return false;
+           }
+           right = right->next;
+           left = left->next;
+       }
+       return true;
+   }
+   
+   ListNode* reverse(ListNode* head) {
+       ListNode* pre = nullptr;
+       ListNode* cur = head;
+       ListNode* next;
+       while (cur) {
+           next = cur->next;
+           cur->next = pre;
+           pre = cur;
+           cur = next;
+       }
+       return pre;
+   }
+   ```
+
+   
+
 ### 数组
 
 |                             题目                             | 难度 | 题解 |
@@ -112,6 +182,78 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 | [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/) | 简单 |      |
 | [27. 移除元素](https://leetcode.cn/problems/remove-element/) | 简单 |      |
 |                                                              |      |      |
+
+#### 前缀和数组
+
+总体来说就是以【空间换时间】
+
+**前缀和主要适用的场景是原始数组不会被修改的情况下，频繁查询某个区间的累加和**。
+
+|                             题目                             | 难度 | 题解 |
+| :----------------------------------------------------------: | :--: | :--: |
+| [303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/) | 简单 |      |
+| [304. 二维区域和检索 - 矩阵不可变](https://leetcode.cn/problems/range-sum-query-2d-immutable/) | 中等 | 304  |
+
+##### 304 二维区域和检索
+
+![img](README.assets/5.jpeg)
+
+#### 差分数组
+
+**差分数组的主要适用场景是频繁对原始数组的某个区间的元素进行增减**。
+
+```cpp
+int diff[nums.size()];
+// 构造差分数组
+diff[0] = nums[0];
+for (int i = 1; i < nums.size(); i++) {
+    diff[i] = nums[i] - nums[i - 1];
+}
+```
+**这样构造差分数组 `diff`，就可以快速进行区间增减的操作**，如果你想对区间 `nums[i..j]` 的元素全部加 3，那么只需要让 `diff[i] += 3`，然后再让 `diff[j+1] -= 3` 即可
+
+只要花费 O(1) 的时间修改 `diff` 数组，就相当于给 `nums` 的整个区间做了修改。多次修改 `diff`，然后通过 `diff` 数组反推，即可得到 `nums` 修改后的结果。
+
+|                             题目                             | 难度 | 题解 |
+| :----------------------------------------------------------: | :--: | :--: |
+|                     370.区间加法（plus）                     | 中等 | 307  |
+| [1109. 航班预订统计](https://leetcode.cn/problems/corporate-flight-bookings/) | 中等 |      |
+|   [1094. 拼车](https://leetcode.cn/problems/car-pooling/)    | 中等 |      |
+
+##### 370区间加法
+
+![img](README.assets/title1.png)
+
+```cpp
+// 定义差分工具
+class Difference {
+public:
+    int* diff;
+    Difference(int* nums, int length) {
+        assert(length > 0);
+        diff = new int[length]();
+        diff[0] = nums[0];
+    }
+    // 给区间[i, j]增加val
+    void increment(int i, int j, int val) {
+        diff[i] += val;
+        if (j+1 < sizeof(diff)-sizeof(diff[0])) {
+            diff[j+1] -= val;
+        }
+    }
+	/* 返回结果数组 */
+    int* result() {
+        int* res = new int[sizeof(diff) / sizeof(diff[0])]();
+        res[0] = diff[0];
+        for (int i = 1; i < sizeof(diff) / sizeof(diff[0]); i++) {
+            res[i] = res[i - 1] + diff[i];
+        }
+        return res;
+    }
+}
+```
+
+
 
 ### nsum问题
 
