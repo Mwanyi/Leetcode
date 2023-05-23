@@ -185,6 +185,31 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 
 #### 前缀和数组
 
+#### 二维数组的花式遍历法
+
+|                             题目                             | 难度 |                             题解                             |
+| :----------------------------------------------------------: | :--: | :----------------------------------------------------------: |
+| [151. 反转字符串中的单词](https://leetcode.cn/problems/reverse-words-in-a-string/) | 中等 |                  先翻转全部，再翻转每个单词                  |
+|  [48. 旋转图像](https://leetcode.cn/problems/rotate-image/)  | 中等 | [labuladong 题解](https://labuladong.github.io/article/slug.html?slug=rotate-image)[思路](https://leetcode.cn/problems/rotate-image/#) |
+| [54. 螺旋矩阵](https://leetcode.cn/problems/spiral-matrix/)  | 中等 |                         设置四个边界                         |
+
+##### 48.翻转图像
+
+1. **先将 `n x n` 矩阵 `matrix` 按照左上到右下的对角线进行镜像对称**：
+
+   ![img](README.assets/2.jpeg)
+
+2. **再对矩阵的每一行进行反转**：
+
+   ![img](README.assets/3.jpeg)
+
+上面是对矩阵进行顺时针翻转，如果想要进行逆时针旋转90°，就可以：
+
+1. 沿右对角线翻转
+2. 再左右水平翻转
+
+#### 前缀和数组
+
 总体来说就是以【空间换时间】
 
 **前缀和主要适用的场景是原始数组不会被修改的情况下，频繁查询某个区间的累加和**。

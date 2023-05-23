@@ -80,6 +80,18 @@ vector<vector<int>> nSumTarget(vector<int>& nums, int n, int start, int target) 
 
 ### 左右指针
 
+### 二维数组的花式遍历方法
+
+#### 顺/逆时针旋转矩阵
+
+1. **先将 `n x n` 矩阵 `matrix` 按照左上到右下的对角线进行镜像对称**：
+
+   ![img](https://labuladong.github.io/algo/images/%e8%8a%b1%e5%bc%8f%e9%81%8d%e5%8e%86/2.jpeg)
+
+2. **再对矩阵的每一行进行反转**：
+
+   ![img](README.assets/3.jpeg)
+
 ## 二叉树
 
 思想模式分为两种：
