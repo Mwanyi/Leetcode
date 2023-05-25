@@ -280,7 +280,7 @@ public:
 
 
 
-### nsum问题
+#### nsum问题
 
 |                         题目                         | 难度 | 题解 |
 | :--------------------------------------------------: | :--: | :--: |
@@ -290,12 +290,79 @@ public:
 
 #### 左右指针
 
-- 二分查找
-- 滑动窗口
+#### 二分查找
 
 |                             题目                             | 难度 |        题解        |
 | :----------------------------------------------------------: | :--: | :----------------: |
 | [167. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/) | 中等 |      左右指针      |
 | [5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/) | 中等 | 中间扩散的左右指针 |
-|                                                              |      |                    |
+|                                                              | 困难 |                    |
+
+#### 滑动窗口
+
+|                             题目                             | 难度 |   题解   |
+| :----------------------------------------------------------: | :--: | :------: |
+| [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/) | 困难 | 滑动窗口 |
+| [567. 字符串的排列](https://leetcode.cn/problems/permutation-in-string/) | 中等 | 滑动窗口 |
+| [438. 找到字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string/) | 中等 | 滑动窗口 |
+| [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/) | 中等 | 滑动窗口 |
+
+##### 76 最小覆盖子串
+
+1. 什么时候应该移动 `right` 扩大窗口？窗口加入字符时，应该更新哪些数据？
+
+   如果一个字符进入窗口，应该增加 `window` 计数器；
+
+2. 什么时候窗口应该暂停扩大，开始移动 `left` 缩小窗口？从窗口移出字符时，应该更新哪些数据？
+
+   当此时满足需要的字符的时候停止扩大；移出字符时需要更新window计数器
+
+3. 我们要的结果应该在扩大窗口时还是缩小窗口时进行更新？
+
+   缩小的时候进行
+
+```cpp
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        unordered_map<char, int> need, window;
+        for (char c : t) {
+            need[c]++;
+        }
+        int left = 0, right = 0;
+        int start = 0, len = __INT32_MAX__;
+        int vaild = 0;
+        while (right < s.size()) {
+            // c是移入的字符，之后扩大窗口
+            char c = s[right++];
+            // 如果c是需要的字符，那么更新窗口并且更新vaild
+            if (need.count(c)) {
+                window[c]++;
+                if (window[c] == need[c]) {
+                    vaild++;
+                }
+            }
+
+            // 判断左侧是否要收缩
+            while (left < right && vaild == need.size()) {
+                // 更新最小串
+                if (right-left < len) {
+                    start = left;
+                    len = right-left;
+                }
+                // 需要收缩的字符
+                char d = s[left++];
+                if (need.count(d)) {
+                    window[d]--;
+                    // 如果不满足need的条件，vaild减小
+                    if (window[d] < need[d]) {
+                        vaild--;
+                    }
+                }
+            }
+        }
+        return len == __INT32_MAX__ ? "":s.substr(start, len);
+    }
+};
+```
 
