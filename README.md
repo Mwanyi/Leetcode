@@ -455,3 +455,93 @@ void slidingWindow(string s) {
 
 - 设置左右指针，区间为**左闭右开**，[left, right)
 
+### 滑动窗口算法延伸：RABIN KARP 字符匹配算法
+
+- 如何在数字的最低位后添加数字
+
+  ```cpp
+  // 在248后添加6
+  int number = 248;
+  // 进制
+  int R = 10;
+  // 要添加的数字
+  int num = 6;
+  number = number*R+num;
+  ```
+
+- 如何删除最高位的数字
+
+  ```cpp
+  // 删除2486的2
+  int number = 2486;
+  // 进制数
+  int R = 10;
+  // 最高位的数字
+  int removeVal = 2;
+  // 最高位的位数
+  int L = 4;
+  number = number - removeVal*R^(L-1);
+  ```
+
+对于字符串匹配问题，运用Rabin karp的思想，就是不要一个一个字符去暴力比较，**而是维护一个滑动窗口，将窗口内的字符都转换为一个hash数字，拿这个哈希值去和模式串的哈希值比较，这样就可以避免截取子串，从而把匹配算法降低为 `O(N)`，这就是 Rabin-Karp 指纹字符串查找算法的核心逻辑**。
+
+```cpp
+#include <string>
+#include <cmath>
+
+using namespace std;
+
+// Rabin-Karp 指纹字符串查找算法
+int rabinKarp(string txt, string pat) {
+    // 位数
+    int L = pat.length();
+    // 进制（只考虑 ASCII 编码）
+    int R = 256;
+    // 取一个比较大的素数作为求模的除数
+    long Q = 1658598167;
+    // R^(L - 1) 的结果
+    long RL = 1;
+    for (int i = 1; i <= L - 1; i++) {
+        // 计算过程中不断求模，避免溢出
+        RL = (RL * R) % Q;
+    }
+    // 计算模式串的哈希值，时间 O(L)
+    long patHash = 0;
+    for (int i = 0; i < pat.length(); i++) {
+        patHash = (R * patHash + pat.at(i)) % Q;
+    }
+
+    // 滑动窗口中子字符串的哈希值
+    long windowHash = 0;
+
+    // 滑动窗口代码框架，时间 O(N)
+    int left = 0, right = 0;
+    while (right < txt.length()) {
+        // 扩大窗口，移入字符
+        windowHash = ((R * windowHash) % Q + txt.at(right)) % Q;
+        right++;
+
+        // 当子串的长度达到要求
+        if (right - left == L) {
+            // 根据哈希值判断是否匹配模式串
+            if (windowHash == patHash) {
+                // 当前窗口中的子串哈希值等于模式串的哈希值
+                // 还需进一步确认窗口子串是否真的和模式串相同，避免哈希冲突
+                if (pat.compare(txt.substr(left, L)) == 0) {
+                    return left;
+                }
+            }
+            // 缩小窗口，移出字符
+            windowHash = (windowHash - (txt.at(left) * RL) % Q + Q) % Q;
+            // X % Q == (X + Q) % Q 是一个模运算法则
+            // 因为 windowHash - (txt[left] * RL) % Q 可能是负数
+            // 所以额外再加一个 Q，保证 windowHash 不会是负数
+
+            left++;
+        }
+    }
+    // 没有找到模式串
+    return -1;
+}
+```
+

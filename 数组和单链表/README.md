@@ -300,12 +300,14 @@ public:
 
 #### 滑动窗口
 
-|                             题目                             | 难度 |   题解   |
-| :----------------------------------------------------------: | :--: | :------: |
-| [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/) | 困难 | 滑动窗口 |
-| [567. 字符串的排列](https://leetcode.cn/problems/permutation-in-string/) | 中等 | 滑动窗口 |
-| [438. 找到字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string/) | 中等 | 滑动窗口 |
-| [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/) | 中等 | 滑动窗口 |
+|                             题目                             | 难度 |       题解        |
+| :----------------------------------------------------------: | :--: | :---------------: |
+| [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/) | 困难 |     滑动窗口      |
+| [567. 字符串的排列](https://leetcode.cn/problems/permutation-in-string/) | 中等 |     滑动窗口      |
+| [438. 找到字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string/) | 中等 |     滑动窗口      |
+| [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/) | 中等 |     滑动窗口      |
+| [187. 重复的DNA序列](https://leetcode.cn/problems/repeated-dna-sequences/) | 中等 |  kabin karp算法   |
+| [28. 找出字符串中第一个匹配项的下标](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/) | 中等 | kabin karp算法 28 |
 
 ##### 76 最小覆盖子串
 
@@ -362,6 +364,51 @@ public:
             }
         }
         return len == __INT32_MAX__ ? "":s.substr(start, len);
+    }
+};
+```
+
+##### 28 找出字符串中第一个匹配项的下标
+
+```cpp
+// kabin karp滑动窗口算法
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        // 位数
+        int L = needle.size();
+        // 进制数,ASCLL编码
+        int R = 256;
+        // 设置一个较大的素数作为hash码
+        long Q = 1658598167;
+        long RL =  1;
+        for (int i = 1; i < L; i++) {
+            RL = (RL*R) % Q;
+        }
+        // 计算匹配字符串的hash数
+        long needlehash = 0;
+        for (int i = 0; i < needle.size(); i++) {
+            needlehash = (needlehash*R+needle[i]) % Q;
+        }
+        int left = 0, right = 0;
+        long windowhash = 0;
+        while (right < haystack.size()) {
+            windowhash = (windowhash*R+haystack[right]) % Q;
+            right++;
+
+            while (left < right && right-left == L) {
+                if (windowhash == needlehash) {
+                    // 还需进一步确认窗口子串是否真的和模式串相同，避免哈希冲突
+                    if (needle == haystack.substr(left, L)) {
+                        return left;
+                    }
+                }
+                // 这里加上Q的原因是防止windowhash减之后为负值，加上Q可以防止为负值
+                windowhash = (windowhash - (haystack[left]*RL)%Q+Q)%Q;
+                left++;
+            }
+        }
+        return -1;
     }
 };
 ```
