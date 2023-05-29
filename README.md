@@ -415,6 +415,18 @@ int right_bound(vector<int>& nums, int target) {
 }
 ```
 
+### 带权重的随机选择算法
+
+> 前缀技巧加上二分搜索算法
+
+把每个权重比较为一根对应长度的片段，当我们随意得到一个数字5，也就是往片段中随机扔下一个石子
+
+![img](https://labuladong.github.io/algo/images/%e9%9a%8f%e6%9c%ba%e6%9d%83%e9%87%8d/3.jpeg)
+
+但是由于preSum中没有5，因此要通过二分搜索定位到5之后的数字6，也就是下标索引3
+
+![img](README.assets/4.jpeg)
+
 ## 滑动窗口
 
 ```cpp

@@ -290,13 +290,66 @@ public:
 
 #### 左右指针
 
-#### 二分查找
-
 |                             题目                             | 难度 |        题解        |
 | :----------------------------------------------------------: | :--: | :----------------: |
 | [167. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/) | 中等 |      左右指针      |
 | [5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/) | 中等 | 中间扩散的左右指针 |
-|                                                              | 困难 |                    |
+|                                                              |      |                    |
+
+#### 二分查找
+
+|                             题目                             | 难度 |        题解        |
+| :----------------------------------------------------------: | :--: | :----------------: |
+| [704. 二分查找](https://leetcode.cn/problems/binary-search/) | 简单 |   最基本二分查找   |
+| [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) | 中等 | 中间扩散的左右指针 |
+| [剑指 Offer 53 - I. 在排序数组中查找数字 I](https://leetcode.cn/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/) | 简单 |     34题的变式     |
+| [528. 按权重随机选择](https://leetcode.cn/problems/random-pick-with-weight/) | 中等 |  前缀和+二分搜索   |
+
+##### 528 按权重随机选择
+
+核心思路就说完了，主要分几步：
+
+1、根据权重数组 `w` 生成前缀和数组 `preSum`。
+
+2、生成一个取值在 `preSum` 之内的随机数，用二分搜索算法寻找大于等于这个随机数的最小元素索引。
+
+3、最后对这个索引减一（因为前缀和数组有一位索引偏移），就可以作为权重数组的索引，即最终答案
+
+```cpp
+vector<int> presum;
+Solution(vector<int>& w) {
+    // 得到前缀和数组
+    presum.resize(w.size()+1);
+    presum[0] = 0;
+    for (int i = 0; i < w.size(); i++) {
+        presum[i+1] = presum[i]+w[i];
+    }
+}
+
+int pickIndex() {
+    int n = presum.size();
+    // 得到在presum最大值范围内的随机数，不取0，所以结果要加一
+    int target = (rand() % presum[n-1])+1;
+    // 调用左侧二分查找算法得到大于等于target的下标
+    // 注意这里的搜索范围为[1, presum_max]
+    int left = 1, right = n-1;
+    while (left <= right) {
+        int mid = left + (right-left)/2;
+        if (presum[mid] < target) {
+            left = mid+1;
+        }
+        else if (presum[mid] > target) {
+            right = mid - 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+    return left-1;
+}
+```
+
+
 
 #### 滑动窗口
 
