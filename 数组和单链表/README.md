@@ -298,12 +298,15 @@ public:
 
 #### 二分查找
 
-|                             题目                             | 难度 |        题解        |
-| :----------------------------------------------------------: | :--: | :----------------: |
-| [704. 二分查找](https://leetcode.cn/problems/binary-search/) | 简单 |   最基本二分查找   |
-| [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) | 中等 | 中间扩散的左右指针 |
-| [剑指 Offer 53 - I. 在排序数组中查找数字 I](https://leetcode.cn/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/) | 简单 |     34题的变式     |
-| [528. 按权重随机选择](https://leetcode.cn/problems/random-pick-with-weight/) | 中等 |  前缀和+二分搜索   |
+|                             题目                             |   难度   |              题解               |
+| :----------------------------------------------------------: | :------: | :-----------------------------: |
+| [704. 二分查找](https://leetcode.cn/problems/binary-search/) |   简单   |         最基本二分查找          |
+| [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) |   中等   |       中间扩散的左右指针        |
+| [剑指 Offer 53 - I. 在排序数组中查找数字 I](https://leetcode.cn/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/) |   简单   |           34题的变式            |
+| [528. 按权重随机选择](https://leetcode.cn/problems/random-pick-with-weight/) |   中等   |         前缀和+二分搜索         |
+| [875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/) |   中等   |          二分搜索运用           |
+| [1011. 在 D 天内送达包裹的能力](https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days/) |   中等   | 与875大致相似，但是需要细致分析 |
+| [410. 分割数组的最大值](https://leetcode.cn/problems/split-array-largest-sum/) | **困难** |           改写为1011            |
 
 ##### 528 按权重随机选择
 
@@ -346,6 +349,97 @@ int pickIndex() {
         }
     }
     return left-1;
+}
+```
+
+##### 857 爱吃香蕉的珂珂
+
+首先考虑该题的`x`和`f(x)`是什么，很明显该题的`x`就是**吃掉香蕉的速度**，而明显速度与花费时间是一个单调递减函数，所以`f(x)`函数就可以确定了，注意这里的`hours`需要使用`long`
+
+```cpp
+// 通过速度计算出此时吃完所有需要的时间
+long f(vector<int>& pils, int k) {
+    long hours = 0;
+    for (int pils : pils) {
+        hours += pils / k;
+        if (pils % k > 0) {
+            hours++;
+        }
+    }
+    return hours;
+}
+```
+
+然后就是主体函数，很明显这里的`target`就是我们给出的`h`，然后找到最小的`x`
+
+考虑二分搜索的`left`和`right`，明显这里的最小速度为1，而最大速度就是香蕉数的最大值
+
+再考虑使用哪个边界，脑海中可以给出一个函数图，是单调递减的，而我们要求最小的k，因此应该是求左边界，因此主体部分就可以得到，这里需要注意由于函数是单调递减，因此考虑边界收缩时需要多多注意
+
+```cpp
+int minEatingSpeed(vector<int>& piles, int h) {
+    // 这里k取值最小为1，最大为每小时最大香蕉数
+    int left = 1, right = 0;
+    for (int pile : piles) {
+        right = max(right, pile);
+    }
+    // 找最小的k，所以为左边界二分搜索
+    while (left <= right) {
+        int mid = left + (right - left)/2;
+        if (f(piles, mid) <= h) {
+            right = mid-1;
+        }
+        else {
+            left = mid+1;
+        }
+    }
+    return left;
+}
+```
+
+##### 410 分割数组的最大值
+
+原题目：给定一个数组`nums`，将这个数组分割为`m`个非空的连续子数组，求这`m`个子数组各自和的最大值的最小值
+
+改写为：一艘货船，每个货物的重量是`nums[i]`，现在需要在`m`天内将这些货物运走，求货船的最小载重是多少？也就变为1011题了。
+
+分析：
+
+- 这里x为最小载重，f(x)返回运完需要的天数，target就为需要的天数m
+- left为每个货物的重量的最大值（也就是`m=nums.size()`），right为总货物（也就是一天就运完，m=1），因为是求最小载重，因此为左边界问题
+
+```cpp
+int f(vector<int>& nums, int c) {
+    int day = 0;
+    int total = 0;
+    for (int num : nums) {
+        total += num;
+        if (total > c) {
+            day++;
+            total = num;
+        }
+    }
+    if (total > 0) {
+        day++;
+    }
+    return day;
+}
+int splitArray(vector<int>& nums, int k) {
+    int left = 0, right = 0;
+    for (int num : nums) {
+        left = max(left, num);
+        right += num;
+    }
+    while (left <= right) {
+        int mid = left + (right-left)/2;
+        if (f(nums, mid) <= k) {
+            right = mid - 1;
+        }
+        else {
+            left = mid + 1;
+        }
+    }
+    return left;
 }
 ```
 

@@ -427,6 +427,41 @@ int right_bound(vector<int>& nums, int target) {
 
 ![img](README.assets/4.jpeg)
 
+### 二分搜索问题的泛化
+
+框架：
+
+```cpp
+// 函数f是关于自变量x的单调函数
+int f(int x) {
+    ...
+}
+
+// 主函数,在f(x)==target的约束下求x的最值
+int solution(int[] nums, int target) {
+    if (nums.length == 0) return -1;
+    // x的最小值和最大值
+    int left = ..;
+    int right = ..;
+    while (left <= right) {
+        int mid = left+(right-left)/2;
+        if (nums[mid] == target) {
+            // 左边界还是右边界
+        	...
+        }
+        else if(nums[mid] < target) {
+            ...
+        }
+        else if(nums[mid] > target) {
+            ...
+        }
+    }
+    return left;
+}
+```
+
+
+
 ## 滑动窗口
 
 ```cpp
