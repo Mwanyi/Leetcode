@@ -178,11 +178,61 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 
 ### 数组
 
-|                             题目                             | 难度 | 题解 |
-| :----------------------------------------------------------: | :--: | :--: |
-| [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/) | 简单 |      |
-| [27. 移除元素](https://leetcode.cn/problems/remove-element/) | 简单 |      |
-|                                                              |      |      |
+|                             题目                             |   难度   |                 题解                 |
+| :----------------------------------------------------------: | :------: | :----------------------------------: |
+| [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/) |   简单   |                                      |
+| [27. 移除元素](https://leetcode.cn/problems/remove-element/) |   简单   |                                      |
+| [380. O(1) 时间插入、删除和获取随机元素](https://leetcode.cn/problems/insert-delete-getrandom-o1/) |   中等   | 380常数时间删除-查找数组中的任意元素 |
+| [710. 黑名单中的随机数](https://leetcode.cn/problems/random-pick-with-blacklist/) | **困难** |                                      |
+
+##### 380 常数时间删除-查找数组中的任意元素
+
+- 对于删除，插入，查找操作时间复杂度为O(1)的数据结构有：`hash`，底层设计可以有数组和链表
+- 但是要想随机选择一个数字，底层设计一定要为数组，但是数组的插入、删除如果要为常数时间，那么就需要在数组尾部进行插入和删除的操作
+
+那么解法就是使用数组来存储元素，但是使用一个`hash`结构来保存元素对应的索引
+
+```cpp
+// 存储当前的数组
+vector<int> nums;
+// 保存对应元素到索引的hash
+unordered_map<int, int> ValToIndex;
+RandomizedSet() {
+
+}
+
+bool insert(int val) {
+    // 如果不存在val
+    if (ValToIndex.count(val) == 0) {
+        nums.push_back(val);
+        ValToIndex[val] = nums.size()-1;
+        return true;
+    }
+    return false;
+}
+
+bool remove(int val) {
+    // 如果存在val
+    if (ValToIndex.count(val)) {
+        int index = ValToIndex[val];
+        int num = nums.back();
+        // 将数组尾部的元素移到需要删除元素的位置
+        ValToIndex[num] = index;
+        nums[index] = num;
+        // 将数组尾部的元素删除
+        nums.pop_back();
+        ValToIndex.erase(val);
+        return true;
+    }
+    return false;
+}
+
+int getRandom() {
+    return nums[rand() % nums.size()];
+}
+```
+
+
 
 #### 前缀和数组
 
