@@ -4,13 +4,14 @@
 
 #### 双指针
 
-|                             题目                             | 难度 |   题解   |
-| :----------------------------------------------------------: | :--: | :------: |
-| [21.合并两个有序链表](https://leetcode.cn/problems/merge-two-sorted-lists/) | 简单 |          |
-| [876. 链表的中间结点](https://leetcode.cn/problems/middle-of-the-linked-list/) | 简单 | 快慢指针 |
-| [19. 删除链表的倒数第 N 个结点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/) | 中等 | 快慢指针 |
-| [141. 环形链表](https://leetcode.cn/problems/linked-list-cycle/) | 简单 | 快慢指针 |
-| [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/) | 中等 |          |
+|                             题目                             | 难度 |                 题解                 |
+| :----------------------------------------------------------: | :--: | :----------------------------------: |
+| [21.合并两个有序链表](https://leetcode.cn/problems/merge-two-sorted-lists/) | 简单 |                                      |
+| [876. 链表的中间结点](https://leetcode.cn/problems/middle-of-the-linked-list/) | 简单 |               快慢指针               |
+| [19. 删除链表的倒数第 N 个结点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/) | 中等 |               快慢指针               |
+| [141. 环形链表](https://leetcode.cn/problems/linked-list-cycle/) | 简单 |               快慢指针               |
+| [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/) | 中等 |                                      |
+| [870. 优势洗牌](https://leetcode.cn/problems/advantage-shuffle/) | 中等 | 总结文档**[田忌赛马背后的算法决策]** |
 
 #### 递归—反转链表
 

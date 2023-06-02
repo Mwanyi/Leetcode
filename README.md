@@ -92,6 +92,316 @@ vector<vector<int>> nSumTarget(vector<int>& nums, int n, int start, int target) 
 
    ![img](README.assets/3.jpeg)
 
+### 二分查找
+
+```cpp
+int BinarySearcher(vector<int>& nums, int target) {
+    // 区间是左闭右闭
+    int begin = 0;
+    int end = nums.size()-1;
+    // while中要加=
+    while (begin <= end) {
+        // 这里更改为这样可以有效防止(begin+end)/2中begin和end太大导致溢出
+        int mid = begin + (end - begin)/2;
+        if (nums[mid] == target) {
+            ...
+        }
+        else if(nums[mid] < target) {
+            begin = mid+1;
+        }
+        else if(nums[mid] > target) {
+            end = mid-1;
+        }
+    }
+    return ..
+}
+```
+
+- 上述框架的缺陷性：不可定位到target的左右边界
+
+#### 寻找左边边界的二分搜索
+
+```cpp
+int left_bound(vector<int>& nums, int target) {
+    int left = 0, right = nums.size() - 1;
+    // 搜索区间为 [left, right]
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            // 搜索区间变为 [mid+1, right]
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            // 搜索区间变为 [left, mid-1]
+            right = mid - 1;
+        } else if (nums[mid] == target) {
+            // 收缩右侧边界，关键点
+            right = mid - 1;
+        }
+    }
+    // 判断 target 是否存在于 nums 中
+    // 此时 target 比所有数都大，返回 -1
+    if (left == nums.size()) return -1;
+    // 判断一下 nums[left] 是不是 target
+    return nums[left] == target ? left : -1;
+}
+```
+
+#### 寻找右边边界的二分搜索
+
+```cpp
+int right_bound(vector<int>& nums, int target) {
+    int left = 0, right = nums.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            right = mid - 1;
+        } else if (nums[mid] == target) {
+            // 这里改成收缩左侧边界即可
+            left = mid + 1;
+        }
+    }
+    // 最后改成返回 left - 1
+    if (left - 1 < 0) return -1;
+    return nums[left - 1] == target ? (left - 1) : -1;
+}
+```
+
+#### 带权重的随机选择算法
+
+> 前缀技巧加上二分搜索算法
+
+把每个权重比较为一根对应长度的片段，当我们随意得到一个数字5，也就是往片段中随机扔下一个石子
+
+![img](https://labuladong.github.io/algo/images/%e9%9a%8f%e6%9c%ba%e6%9d%83%e9%87%8d/3.jpeg)
+
+但是由于preSum中没有5，因此要通过二分搜索定位到5之后的数字6，也就是下标索引3
+
+![img](README.assets/4.jpeg)
+
+#### 二分搜索问题的泛化
+
+框架：
+
+```cpp
+// 函数f是关于自变量x的单调函数
+int f(int x) {
+    ...
+}
+
+// 主函数,在f(x)==target的约束下求x的最值
+int solution(int[] nums, int target) {
+    if (nums.length == 0) return -1;
+    // x的最小值和最大值
+    int left = ..;
+    int right = ..;
+    while (left <= right) {
+        int mid = left+(right-left)/2;
+        if (nums[mid] == target) {
+            // 左边界还是右边界
+        	...
+        }
+        else if(nums[mid] < target) {
+            ...
+        }
+        else if(nums[mid] > target) {
+            ...
+        }
+    }
+    return left;
+}
+```
+
+
+
+### 滑动窗口
+
+```cpp
+/* 滑动窗口算法框架 */
+void slidingWindow(string s) {
+    // 用合适的数据结构记录窗口中的数据
+    unordered_map<char, int> window;
+    
+    int left = 0, right = 0;
+    while (right < s.size()) {
+        // c 是将移入窗口的字符
+        char c = s[right];
+        winodw.add(c)
+        // 增大窗口
+        right++;
+        // 进行窗口内数据的一系列更新
+        ...
+
+        /*** debug 输出的位置 ***/
+        // 注意在最终的解法代码中不要 print
+        // 因为 IO 操作很耗时，可能导致超时
+        printf("window: [%d, %d)\n", left, right);
+        /********************/
+        
+        // 判断左侧窗口是否要收缩
+        while (left < right && window needs shrink) {
+            // d 是将移出窗口的字符
+            char d = s[left];
+            winodw.remove(d)
+            // 缩小窗口
+            left++;
+            // 进行窗口内数据的一系列更新
+            ...
+        }
+    }
+}
+```
+
+- 设置左右指针，区间为**左闭右开**，[left, right)
+
+#### 滑动窗口算法延伸：RABIN KARP 字符匹配算法
+
+- 如何在数字的最低位后添加数字
+
+  ```cpp
+  // 在248后添加6
+  int number = 248;
+  // 进制
+  int R = 10;
+  // 要添加的数字
+  int num = 6;
+  number = number*R+num;
+  ```
+
+- 如何删除最高位的数字
+
+  ```cpp
+  // 删除2486的2
+  int number = 2486;
+  // 进制数
+  int R = 10;
+  // 最高位的数字
+  int removeVal = 2;
+  // 最高位的位数
+  int L = 4;
+  number = number - removeVal*R^(L-1);
+  ```
+
+对于字符串匹配问题，运用Rabin karp的思想，就是不要一个一个字符去暴力比较，**而是维护一个滑动窗口，将窗口内的字符都转换为一个hash数字，拿这个哈希值去和模式串的哈希值比较，这样就可以避免截取子串，从而把匹配算法降低为 `O(N)`，这就是 Rabin-Karp 指纹字符串查找算法的核心逻辑**。
+
+```cpp
+#include <string>
+#include <cmath>
+
+using namespace std;
+
+// Rabin-Karp 指纹字符串查找算法
+int rabinKarp(string txt, string pat) {
+    // 位数
+    int L = pat.length();
+    // 进制（只考虑 ASCII 编码）
+    int R = 256;
+    // 取一个比较大的素数作为求模的除数
+    long Q = 1658598167;
+    // R^(L - 1) 的结果
+    long RL = 1;
+    for (int i = 1; i <= L - 1; i++) {
+        // 计算过程中不断求模，避免溢出
+        RL = (RL * R) % Q;
+    }
+    // 计算模式串的哈希值，时间 O(L)
+    long patHash = 0;
+    for (int i = 0; i < pat.length(); i++) {
+        patHash = (R * patHash + pat.at(i)) % Q;
+    }
+
+    // 滑动窗口中子字符串的哈希值
+    long windowHash = 0;
+
+    // 滑动窗口代码框架，时间 O(N)
+    int left = 0, right = 0;
+    while (right < txt.length()) {
+        // 扩大窗口，移入字符
+        windowHash = ((R * windowHash) % Q + txt.at(right)) % Q;
+        right++;
+
+        // 当子串的长度达到要求
+        if (right - left == L) {
+            // 根据哈希值判断是否匹配模式串
+            if (windowHash == patHash) {
+                // 当前窗口中的子串哈希值等于模式串的哈希值
+                // 还需进一步确认窗口子串是否真的和模式串相同，避免哈希冲突
+                if (pat.compare(txt.substr(left, L)) == 0) {
+                    return left;
+                }
+            }
+            // 缩小窗口，移出字符
+            windowHash = (windowHash - (txt.at(left) * RL) % Q + Q) % Q;
+            // X % Q == (X + Q) % Q 是一个模运算法则
+            // 因为 windowHash - (txt[left] * RL) % Q 可能是负数
+            // 所以额外再加一个 Q，保证 windowHash 不会是负数
+
+            left++;
+        }
+    }
+    // 没有找到模式串
+    return -1;
+}
+```
+
+### 田忌赛马背后的算法决策
+
+田忌赛马的升级版，如果有多匹马，那么具体的策略就是，如果自身最大的可以打得过对方的最大的，那么就对抗，如果不行则派出自身最弱的对抗对方最强的，如果抽象为两个数组：
+
+给你输入两个**长度相等**的数组 `nums1` 和 `nums2`，请你重新组织 `nums1` 中元素的位置，使得 `nums1` 的「优势」最大化。
+
+如果 `nums1[i] > nums2[i]`，就是说 `nums1` 在索引 `i` 上对 `nums2[i]` 有「优势」。优势最大化也就是说让你重新组织 `nums1`，**尽可能多的让 `nums1[i] > nums2[i]`**。
+
+解法：
+
+如果自身最大的可以打得过对方的最大的，那么就对抗，如果不行则派出自身最弱的对抗对方最强的
+
+- 使用优先队列重新排序`nums2`的数字，但是同时需要保存数字下标
+- `nums1`直接使用排序算法，每次取出`nums2`中的最大值，若`nums1`最大值(也就是右边的元素)大于最大值，则该位置上派出该最大值，否则，该位置派出`nums1`的最小值(也就是左边元素)
+
+```cpp
+struct num {
+    int index;
+    int val;
+    num(int _index, int _val) {
+        index = _index;
+        val = _val;
+    }
+    // 默认降序，堆使用小根堆，因此重载<
+    bool operator < (const num& n) const{
+        return val < n.val;
+    }
+};
+vector<int> advantageCount(vector<int>& nums1, vector<int>& nums2) {
+    int n = nums2.size();
+    vector<int> result(n);
+    // 使用优先队列对nums2进行排序,默认降序
+    priority_queue<num> maxnums2;
+    for (int i = 0; i < n; i++) {
+        maxnums2.push(num(i, nums2[i]));
+    }
+    // 对nums1进行排序
+    std::sort(nums1.begin(), nums1.end());
+    // 使用双指针得到最小值和最大值
+    int left = 0, right = n-1;
+    while (!maxnums2.empty()) {
+        if (maxnums2.top().val < nums1[right]) {
+            result[maxnums2.top().index] = nums1[right];
+            right--;
+        }
+        else {
+            result[maxnums2.top().index] = nums1[left];
+            left++;
+        }
+        maxnums2.pop();
+    }
+    return result;
+}
+```
+
+
+
 ## 二叉树
 
 思想模式分为两种：
@@ -338,257 +648,3 @@ int BFS(Node start, Node target) {
   ![img](README.assets/2.jpeg)
 
 - 但是使用双向BFS的前提是知道终点
-
-## 二分查找
-
-```cpp
-int BinarySearcher(vector<int>& nums, int target) {
-    // 区间是左闭右闭
-    int begin = 0;
-    int end = nums.size()-1;
-    // while中要加=
-    while (begin <= end) {
-        // 这里更改为这样可以有效防止(begin+end)/2中begin和end太大导致溢出
-        int mid = begin + (end - begin)/2;
-        if (nums[mid] == target) {
-            ...
-        }
-        else if(nums[mid] < target) {
-            begin = mid+1;
-        }
-        else if(nums[mid] > target) {
-            end = mid-1;
-        }
-    }
-    return ..
-}
-```
-
-- 上述框架的缺陷性：不可定位到target的左右边界
-
-### 寻找左边边界的二分搜索
-
-```cpp
-int left_bound(vector<int>& nums, int target) {
-    int left = 0, right = nums.size() - 1;
-    // 搜索区间为 [left, right]
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] < target) {
-            // 搜索区间变为 [mid+1, right]
-            left = mid + 1;
-        } else if (nums[mid] > target) {
-            // 搜索区间变为 [left, mid-1]
-            right = mid - 1;
-        } else if (nums[mid] == target) {
-            // 收缩右侧边界，关键点
-            right = mid - 1;
-        }
-    }
-    // 判断 target 是否存在于 nums 中
-    // 此时 target 比所有数都大，返回 -1
-    if (left == nums.size()) return -1;
-    // 判断一下 nums[left] 是不是 target
-    return nums[left] == target ? left : -1;
-}
-```
-
-### 寻找右边边界的二分搜索
-
-```cpp
-int right_bound(vector<int>& nums, int target) {
-    int left = 0, right = nums.size() - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] < target) {
-            left = mid + 1;
-        } else if (nums[mid] > target) {
-            right = mid - 1;
-        } else if (nums[mid] == target) {
-            // 这里改成收缩左侧边界即可
-            left = mid + 1;
-        }
-    }
-    // 最后改成返回 left - 1
-    if (left - 1 < 0) return -1;
-    return nums[left - 1] == target ? (left - 1) : -1;
-}
-```
-
-### 带权重的随机选择算法
-
-> 前缀技巧加上二分搜索算法
-
-把每个权重比较为一根对应长度的片段，当我们随意得到一个数字5，也就是往片段中随机扔下一个石子
-
-![img](https://labuladong.github.io/algo/images/%e9%9a%8f%e6%9c%ba%e6%9d%83%e9%87%8d/3.jpeg)
-
-但是由于preSum中没有5，因此要通过二分搜索定位到5之后的数字6，也就是下标索引3
-
-![img](README.assets/4.jpeg)
-
-### 二分搜索问题的泛化
-
-框架：
-
-```cpp
-// 函数f是关于自变量x的单调函数
-int f(int x) {
-    ...
-}
-
-// 主函数,在f(x)==target的约束下求x的最值
-int solution(int[] nums, int target) {
-    if (nums.length == 0) return -1;
-    // x的最小值和最大值
-    int left = ..;
-    int right = ..;
-    while (left <= right) {
-        int mid = left+(right-left)/2;
-        if (nums[mid] == target) {
-            // 左边界还是右边界
-        	...
-        }
-        else if(nums[mid] < target) {
-            ...
-        }
-        else if(nums[mid] > target) {
-            ...
-        }
-    }
-    return left;
-}
-```
-
-
-
-## 滑动窗口
-
-```cpp
-/* 滑动窗口算法框架 */
-void slidingWindow(string s) {
-    // 用合适的数据结构记录窗口中的数据
-    unordered_map<char, int> window;
-    
-    int left = 0, right = 0;
-    while (right < s.size()) {
-        // c 是将移入窗口的字符
-        char c = s[right];
-        winodw.add(c)
-        // 增大窗口
-        right++;
-        // 进行窗口内数据的一系列更新
-        ...
-
-        /*** debug 输出的位置 ***/
-        // 注意在最终的解法代码中不要 print
-        // 因为 IO 操作很耗时，可能导致超时
-        printf("window: [%d, %d)\n", left, right);
-        /********************/
-        
-        // 判断左侧窗口是否要收缩
-        while (left < right && window needs shrink) {
-            // d 是将移出窗口的字符
-            char d = s[left];
-            winodw.remove(d)
-            // 缩小窗口
-            left++;
-            // 进行窗口内数据的一系列更新
-            ...
-        }
-    }
-}
-```
-
-- 设置左右指针，区间为**左闭右开**，[left, right)
-
-### 滑动窗口算法延伸：RABIN KARP 字符匹配算法
-
-- 如何在数字的最低位后添加数字
-
-  ```cpp
-  // 在248后添加6
-  int number = 248;
-  // 进制
-  int R = 10;
-  // 要添加的数字
-  int num = 6;
-  number = number*R+num;
-  ```
-
-- 如何删除最高位的数字
-
-  ```cpp
-  // 删除2486的2
-  int number = 2486;
-  // 进制数
-  int R = 10;
-  // 最高位的数字
-  int removeVal = 2;
-  // 最高位的位数
-  int L = 4;
-  number = number - removeVal*R^(L-1);
-  ```
-
-对于字符串匹配问题，运用Rabin karp的思想，就是不要一个一个字符去暴力比较，**而是维护一个滑动窗口，将窗口内的字符都转换为一个hash数字，拿这个哈希值去和模式串的哈希值比较，这样就可以避免截取子串，从而把匹配算法降低为 `O(N)`，这就是 Rabin-Karp 指纹字符串查找算法的核心逻辑**。
-
-```cpp
-#include <string>
-#include <cmath>
-
-using namespace std;
-
-// Rabin-Karp 指纹字符串查找算法
-int rabinKarp(string txt, string pat) {
-    // 位数
-    int L = pat.length();
-    // 进制（只考虑 ASCII 编码）
-    int R = 256;
-    // 取一个比较大的素数作为求模的除数
-    long Q = 1658598167;
-    // R^(L - 1) 的结果
-    long RL = 1;
-    for (int i = 1; i <= L - 1; i++) {
-        // 计算过程中不断求模，避免溢出
-        RL = (RL * R) % Q;
-    }
-    // 计算模式串的哈希值，时间 O(L)
-    long patHash = 0;
-    for (int i = 0; i < pat.length(); i++) {
-        patHash = (R * patHash + pat.at(i)) % Q;
-    }
-
-    // 滑动窗口中子字符串的哈希值
-    long windowHash = 0;
-
-    // 滑动窗口代码框架，时间 O(N)
-    int left = 0, right = 0;
-    while (right < txt.length()) {
-        // 扩大窗口，移入字符
-        windowHash = ((R * windowHash) % Q + txt.at(right)) % Q;
-        right++;
-
-        // 当子串的长度达到要求
-        if (right - left == L) {
-            // 根据哈希值判断是否匹配模式串
-            if (windowHash == patHash) {
-                // 当前窗口中的子串哈希值等于模式串的哈希值
-                // 还需进一步确认窗口子串是否真的和模式串相同，避免哈希冲突
-                if (pat.compare(txt.substr(left, L)) == 0) {
-                    return left;
-                }
-            }
-            // 缩小窗口，移出字符
-            windowHash = (windowHash - (txt.at(left) * RL) % Q + Q) % Q;
-            // X % Q == (X + Q) % Q 是一个模运算法则
-            // 因为 windowHash - (txt[left] * RL) % Q 可能是负数
-            // 所以额外再加一个 Q，保证 windowHash 不会是负数
-
-            left++;
-        }
-    }
-    // 没有找到模式串
-    return -1;
-}
-```
-

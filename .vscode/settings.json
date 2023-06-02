@@ -6,6 +6,7 @@
         "utility": "cpp",
         "deque": "cpp",
         "string": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "unordered_map": "cpp"
     }
 }
