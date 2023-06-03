@@ -400,7 +400,58 @@ vector<int> advantageCount(vector<int>& nums1, vector<int>& nums2) {
 }
 ```
 
+### 数组去重算法
 
+- 使用hash
+
+- 如果要求常数时间去重，就是双指针
+
+- 去重+不能打乱顺序+字典序最小
+
+  - 使用一个数组`isstack`记录是否进入栈，来保证不重复
+  - 使用栈进行push和pop操作来保证不打乱顺序
+  - 使用一个`count`数组来记录整个字符串每个字符出现的次数，当栈顶元素大于插入元素并且之后栈顶元素还会出现，那么就pop出去，如果栈顶元素之后不会出现`count[top] == 0`则不再pop栈顶元素
+
+  ```cpp
+  string removeDuplicateLetters(string s) {
+      // 维系一个isstack数组来存储当前字符是否已经进栈
+      vector<bool> isstack(256, false);
+      // 维系一个栈来进行入栈出栈操作，保证顺序不变
+      stack<char> sta;
+      // 维系count数组来保存每个字符还有多少没有被遍历
+      vector<int> count(256);
+      for (char c : s) {
+          count[c]++;
+      }
+      for (char c : s) {
+          count[c]--;
+          // 如果当前字符已经在栈中，则不做任何操作
+          if (isstack[c]) {
+              continue;
+          }
+          // 如果当前字符小于栈顶元素
+          while (!sta.empty() && c < sta.top()) {
+              if (count[sta.top()] == 0) {
+                  break;
+              }
+              isstack[sta.top()] = false;
+              sta.pop();
+          }
+          // 插入当前元素
+          isstack[c] = true;
+          sta.push(c);
+      }
+      string result(sta.size(), ' ');
+      for (int i = sta.size()-1; i >= 0; i--) {
+          result[i] = sta.top();
+          sta.pop();
+      }
+      //result.reserve();
+      return result;
+  }
+  ```
+
+  
 
 ## 二叉树
 

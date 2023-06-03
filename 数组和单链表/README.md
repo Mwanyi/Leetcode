@@ -184,6 +184,7 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 | [27. 移除元素](https://leetcode.cn/problems/remove-element/) |   简单   |                                      |
 | [380. O(1) 时间插入、删除和获取随机元素](https://leetcode.cn/problems/insert-delete-getrandom-o1/) |   中等   | 380常数时间删除-查找数组中的任意元素 |
 | [710. 黑名单中的随机数](https://leetcode.cn/problems/random-pick-with-blacklist/) | **困难** |                                      |
+| [316. 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/) 一致 [1081. 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters/) |   中等   |      去重问题，查看汇总去重问题      |
 
 ##### 380 常数时间删除-查找数组中的任意元素
 
